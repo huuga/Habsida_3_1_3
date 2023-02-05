@@ -1,6 +1,5 @@
 package ru.kata.spring.boot_security.demo.dao;
 
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.stereotype.Repository;
 import ru.kata.spring.boot_security.demo.entity.User;
 
@@ -16,8 +15,7 @@ public class UserDaoImp implements UserDao {
    @Override
    public List<User> getUsersList() {
       Query query = em.createQuery("SELECT u FROM User u");
-      List<User> entities = query.getResultList();
-      return entities;
+      return query.getResultList();
    }
 
    @Override
@@ -27,15 +25,26 @@ public class UserDaoImp implements UserDao {
 
    @Override
    public void removeUser(Long id) {
-//      Query query = em.createQuery("delete from User u where u.id=:id")
-//              .setParameter("id", id);
-//      query.executeUpdate();
+      User user = em.find(User.class, id);
+      em.remove(user);
+   }
+
+   @Override
+   public User findUserByUsername(String username) {
+      TypedQuery<User> query = em.createQuery("SELECT u FROM User u WHERE u.username = :username", User.class);
+      query.setParameter("username", username);
+      try {
+         return query.getSingleResult();
+      } catch (NoResultException e) {
+         return null;
+      }
    }
 
    @Override
    public User findUserById(Long id) {
       return em.find(User.class, id);
    }
+
 
    @Override
    public void updateUser(User user) {

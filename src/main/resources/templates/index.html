@@ -5,7 +5,22 @@
 </head>
 <body>
 <h1>Welcome to Index PAGE!</h1>
-<br> <a th:href="@{/login}">Login</a> <br>
+
+<br>
+<div th:if="${!authenticated}">
+    <a th:href="@{/login}">Login</a>
+</div>
+<br>
+
+
+
+<br><br>
+<div th:if="${authenticated}">
+    <br> <a th:href="@{/user}">My profile</a> <br><br>
+    <br> <a th:href="@{/admin}">Manage users</a> <br><br>
+    <p th:text="${username}"></p>
+    <a href="#" th:href="@{/logout}">Log Out</a>
+</div>
 
 </body>
 </html>
